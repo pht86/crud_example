@@ -20,7 +20,7 @@ myApp.controller('crudCtrl', function ($scope){
         $scope.message = "Sửa thành công!";
     };
     $scope.deleteUser = function(){
-        $scope.students.splice($scope.students.indexOf($scope.clickedUser));
+        $scope.students.splice($scope.students.indexOf($scope.clickedUser), 1);
         $scope.message = "Đã xóa thành công!";
     };
     $scope.clearMessage = function(){
