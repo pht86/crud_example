@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html ng-app="crudApp">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS | Filter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body style="width: 80%; margin-left: 10%;">
+<h1 style="margin-bottom: 50px; margin-top: 30px;">Danh sách sinh viên</h1>
+<div ng-controller="crudCtrl">
+    <div class="alert alert-success alert-dismissable" ng-if="message">
+
+        <a href="#" class="close" ng-click="clearMessage()"></a>
+        <strong>{{message}}!</strong>
+    </div>
+    <button type="button" class="btn btn-primary float-md-right" data-toggle="modal"
+            data-target="#modalAdd">Thêm mới
+    </button>
+    <table class="table">
+        <thead>
+        <th>STT</th>
+        <th>Họ tên</th>
+        <th>Năm sinh</th>
+        <th>Quê quán</th>
+        <th>Thao tác</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="student in students | orderBy:sortColumn">
+            <td>{{$index + 1}}.</td>
+            <td>{{student.name}}</td>
+            <td>{{student.birthYear}}</td>
+            <td>{{student.address}}</td>
+            <td>
+                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                        data-target="#modalEdit" ng-click="selectUser(student)">Sửa
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                        data-target="#modalDelete" ng-click="selectUser(student)">Xóa
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--    Modal Add-->
+    <div class="modal fade" id="modalAdd" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm sinh viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <label class="control-label col-sm-2">Họ tên</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="newUser.name">
+
+                        </div>
+                        <label class="control-label col-sm-2">Năm sinh</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="newUser.birthYear">
+
+                        </div>
+                        <label class="control-label col-sm-2">Quê quán</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="newUser.address">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" ng-click="addUser()" data-dismiss="modal">
+                        Thêm mới
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    Modal Edit-->
+    <div class="modal fade" id="modalEdit" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sửa thông tin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <label class="control-label col-sm-2">Họ tên</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="clickedUser.name">
+
+                        </div>
+                        <label class="control-label col-sm-2">Năm sinh</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="clickedUser.birthYear">
+
+                        </div>
+                        <label class="control-label col-sm-2">Quê quán</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="clickedUser.address">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" ng-click="editUser()" data-dismiss="modal">
+                        Lưu thông tin
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    Modal Delete-->
+    <div class="modal fade" id="modalDelete" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xóa Sinh viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="deleteUser()">Xóa</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
+</body>
+</html>
